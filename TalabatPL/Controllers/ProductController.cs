@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TalabatCore;
 using TalabatCore.Repositories.Contracts;
 
 namespace TalabatPL.Controllers
@@ -8,9 +9,11 @@ namespace TalabatPL.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        public ProductController()
+        private readonly IUnitOfWork unitOfWork;
+
+        public ProductController(IUnitOfWork unitOfWork)
         {
-            
+            this.unitOfWork = unitOfWork;
         }
 
 

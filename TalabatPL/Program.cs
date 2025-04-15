@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using TalabatCore;
+using TalabatRepository;
 using TalabatRepository.Data;
 
 namespace TalabatPL
@@ -23,7 +25,7 @@ namespace TalabatPL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
