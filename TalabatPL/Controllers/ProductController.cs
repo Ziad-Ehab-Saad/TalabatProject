@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TalabatCore;
 using TalabatCore.Entities;
+using TalabatCore.Specifications;
+using TalabatCore.Specifications.ProductSpecifications;
 
 namespace TalabatPL.Controllers
 {
@@ -17,31 +19,37 @@ namespace TalabatPL.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync()
         {
-            var products = await unitOfWork.Repository<Product>().GetAllAsync();
-            if (products is null|| !products.Any())
+            var spec = new ProductsWithCategoryAndBrandSpec();
+
+            var products = await unitOfWork.Repository<Product>().GetAllWithSpecAsync(spec);
+
+            if (products is null || !products.Any())
             {
                 return NotFound("No products found.");
             }
             return Ok(products);
+            //var products = await unitOfWork.Repository<Product>().GetAllAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var product= await unitOfWork.Repository<Product>().GetByIdAsync(id);
-            if (product is null )
+            var spec = new ProductsWithCategoryAndBrandSpec(id);
+       
+            var product = await unitOfWork.Repository<Product>().GetByIdWithSpecAsync(spec);
+            if (product is null)
             {
                 return NotFound();
 
             }
             return Ok(product);
         }
-        public async Task Test()
-        {
-            //    Expression<Predicate<Product>> filter = p => p.Category == "Book";
-            //    Expression<Func<Product, string>> filter = p => p.Name;
-            //    Expression<Action<Product>> print = p => Console.WriteLine(p.Name+p.Price);
-            //}
-        }
+        //public async Task Test()
+        //{
+        //    //    Expression<Predicate<Product>> filter = p => p.Category == "Book";
+        //    //    Expression<Func<Product, string>> filter = p => p.Name;
+        //    //    Expression<Action<Product>> print = p => Console.WriteLine(p.Name+p.Price);
+        //    //}
+        //}
     }
 }
