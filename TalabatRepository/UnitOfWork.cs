@@ -37,21 +37,6 @@ namespace TalabatRepository
         }
 
 
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
         public async Task<int> CompleteAsync()
         {
             return await storeContext.SaveChangesAsync();
