@@ -1,23 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TalabatCore;
 using TalabatCore.Entities;
 using TalabatCore.Specifications;
 using TalabatCore.Specifications.ProductSpecifications;
+using TalabatPL.DTOs;
 
 namespace TalabatPL.Controllers
 {
     public class ProductController : ApiBaseController
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork,IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetAllAsync()
         {
             var spec = new ProductsWithCategoryAndBrandSpec();
 
@@ -27,12 +31,12 @@ namespace TalabatPL.Controllers
             {
                 return NotFound("No products found.");
             }
-            return Ok(products);
+            return Ok(mapper.Map<IEnumerable<Product>, IEnumerable<ProductToReturnDto>>(products));
             //var products = await unitOfWork.Repository<Product>().GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductById(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProductById(int id)
         {
             var spec = new ProductsWithCategoryAndBrandSpec(id);
        
@@ -42,7 +46,7 @@ namespace TalabatPL.Controllers
                 return NotFound();
 
             }
-            return Ok(product);
+            return Ok(mapper.Map<Product,ProductToReturnDto>(product));
         }
         //public async Task Test()
         //{

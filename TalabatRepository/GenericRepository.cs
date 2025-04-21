@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 using TalabatCore.Entities;
 using TalabatCore.Repositories.Contracts;
 using TalabatCore.Specifications;

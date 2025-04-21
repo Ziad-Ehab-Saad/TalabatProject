@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TalabatCore;
+using TalabatPL.Helpers;
 using TalabatRepository;
 using TalabatRepository.Data;
 
@@ -27,7 +28,7 @@ namespace TalabatPL
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
+            builder.Services.AddAutoMapper(e => e.AddProfile(new MappingProfiles()));
 
             var app = builder.Build();
 
