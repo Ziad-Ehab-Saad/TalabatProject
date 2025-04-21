@@ -29,6 +29,7 @@ namespace TalabatPL
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddAutoMapper(e => e.AddProfile(new MappingProfiles()));
+            builder.Services.AddTransient<ProductPictureResolver>();
 
             var app = builder.Build();
 
@@ -60,6 +61,7 @@ namespace TalabatPL
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
             app.UseAuthorization();
 
 
