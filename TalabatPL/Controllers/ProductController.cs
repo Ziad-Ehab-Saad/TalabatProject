@@ -7,6 +7,7 @@ using TalabatCore.Entities;
 using TalabatCore.Specifications;
 using TalabatCore.Specifications.ProductSpecifications;
 using TalabatPL.DTOs;
+using TalabatPL.Erros;
 
 namespace TalabatPL.Controllers
 {
@@ -15,7 +16,7 @@ namespace TalabatPL.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductController(IUnitOfWork unitOfWork,IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -29,7 +30,7 @@ namespace TalabatPL.Controllers
 
             if (products is null || !products.Any())
             {
-                return NotFound("No products found.");
+                return NotFound(new ApiResponseError(404));
             }
             return Ok(mapper.Map<IEnumerable<Product>, IEnumerable<ProductToReturnDto>>(products));
             //var products = await unitOfWork.Repository<Product>().GetAllAsync();
@@ -39,14 +40,14 @@ namespace TalabatPL.Controllers
         public async Task<ActionResult<ProductToReturnDto>> GetProductById(int id)
         {
             var spec = new ProductsWithCategoryAndBrandSpec(id);
-       
+
             var product = await unitOfWork.Repository<Product>().GetByIdWithSpecAsync(spec);
             if (product is null)
             {
-                return NotFound();
+                return NotFound(new ApiResponseError(404));
 
             }
-            return Ok(mapper.Map<Product,ProductToReturnDto>(product));
+            return Ok(mapper.Map<Product, ProductToReturnDto>(product));
         }
         //public async Task Test()
         //{

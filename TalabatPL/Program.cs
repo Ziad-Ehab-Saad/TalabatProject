@@ -1,7 +1,9 @@
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TalabatCore;
+using TalabatPL.Erros;
 using TalabatPL.Helpers;
 using TalabatRepository;
 using TalabatRepository.Data;
@@ -31,6 +33,25 @@ namespace TalabatPL
             builder.Services.AddAutoMapper(e => e.AddProfile(new MappingProfiles()));
             builder.Services.AddTransient<ProductPictureResolver>();
 
+            #region Handling Validation Errors
+
+
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (context) =>
+                {
+                    var errors = context.ModelState.Where(e => e.Value.Errors.Count > 0)
+                        .SelectMany(e => e.Value.Errors)
+                        .Select(e => e.ErrorMessage).ToList();
+                    var errorResponse = new ApiValidationErrorResponse
+                    {
+                        Erros = errors
+                    };
+                    return new BadRequestObjectResult(errorResponse);
+                };
+            });
+            #endregion
             var app = builder.Build();
 
             //ask CLR explicitly to create obj from Context
