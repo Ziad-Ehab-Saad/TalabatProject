@@ -22,9 +22,13 @@ namespace TalabatPL.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
+        
+        [ProducesResponseType(typeof(ProductToReturnDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseError),StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetAllAsync()
         {
             var spec = new ProductsWithCategoryAndBrandSpec();
+
 
             var products = await unitOfWork.Repository<Product>().GetAllWithSpecAsync(spec);
 
@@ -37,6 +41,8 @@ namespace TalabatPL.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ProductToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseError), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProductById(int id)
         {
             var spec = new ProductsWithCategoryAndBrandSpec(id);
