@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TalabatCore;
 using TalabatPL.Erros;
 using TalabatPL.Helpers;
+using TalabatPL.Middlewares;
 using TalabatRepository;
 using TalabatRepository.Data;
 
@@ -34,9 +35,6 @@ namespace TalabatPL
             builder.Services.AddTransient<ProductPictureResolver>();
 
             #region Handling Validation Errors
-
-
-
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = (context) =>
@@ -53,7 +51,7 @@ namespace TalabatPL
             });
             #endregion
             var app = builder.Build();
-
+            app.UseMiddleware<ExceptionResponseMiddleware>();
             //ask CLR explicitly to create obj from Context
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
