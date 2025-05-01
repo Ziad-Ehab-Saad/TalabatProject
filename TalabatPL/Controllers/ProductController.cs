@@ -25,9 +25,9 @@ namespace TalabatPL.Controllers
         
         [ProducesResponseType(typeof(ProductToReturnDto),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponseError),StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetAllAsync(string sort)
         {
-            var spec = new ProductsWithCategoryAndBrandSpec();
+            var spec = new ProductsWithCategoryAndBrandSpec(sort);
 
 
             var products = await unitOfWork.Repository<Product>().GetAllWithSpecAsync(spec);
@@ -55,6 +55,37 @@ namespace TalabatPL.Controllers
             }
             return Ok(mapper.Map<Product, ProductToReturnDto>(product));
         }
+
+
+        [HttpGet("Brands")]
+        public async Task<ActionResult<IEnumerable<ProductBrand>>> GetBrandsAsync()
+        {
+            var brands=await  unitOfWork.Repository<ProductBrand>().GetAllAsync();
+            if (brands is null)
+            {
+                return NotFound(new ApiResponseError(404));
+            }
+            return Ok(brands);
+            
+        }
+        [HttpGet("Categories")]
+        public async Task<ActionResult<IEnumerable<ProductCategory>>> GetCategoryAsync()
+        {
+            var categories = await unitOfWork.Repository<ProductCategory>().GetAllAsync();
+            if (categories is null)
+            {
+                return NotFound(new ApiResponseError(404));
+            }
+            return Ok(categories);
+
+        }
+
+
+
+
+
+
+
         //public async Task Test()
         //{
         //    //    Expression<Predicate<Product>> filter = p => p.Category == "Book";

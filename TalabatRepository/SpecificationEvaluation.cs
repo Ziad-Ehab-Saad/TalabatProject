@@ -19,6 +19,12 @@ namespace TalabatRepository
                 //spec.Criteria = p=>p.id==10
                 query = query.Where(spec.Criteria);
             }
+            if(spec.OrderBy is not null)
+                query= query.OrderBy(spec.OrderBy);
+          
+            else if (spec.OrderByDesc is not null)
+                query = query.OrderByDescending(spec.OrderByDesc);
+
             //storeContext.product.where(cre).include(e=>e.employee).Include(b=>b.brands);
             query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
             return query;
